@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+	<title>Versus</title>
+	
+	<link rel="stylesheet" href="styles.css">
+	
+</head>
+<header>
+  <h1 align="center">Versus</h1>
+</header>
+<body>
+  <div>
+    <form>
+      <label for="first">Team/Player</label><br>
+      <input type="text" id="first" name="first">
+      <p>vs.</p>
+      <label for="second">Team</label><br>
+      <input type="text" id="second" name="second">
+      <!-- Do a button instead of type=submit -->
+      <input onclick="find_players()" type="button" value="Submit">
+    </form>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script src="playerScraper.js"></script>
+
+</body>
+</html>
