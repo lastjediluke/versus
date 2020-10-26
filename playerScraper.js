@@ -1,6 +1,13 @@
+// Start server: python3 -m http.server 1234 --bind 127.0.0.1
+// http://127.0.0.1:1234/
+
+
 // const rp = require('request-promise');
 // const $ = require('cheerio');
 // const url = 'https://www.pro-football-reference.com/players/T/ThomMi05/gamelog/';
+
+
+
 const search_url = "https://www.pro-football-reference.com/search/search.fcgi?hint=Michael+Thomas&search=Michael+Thomas"
 const heroku = "https://cors-anywhere.herokuapp.com/"
 
@@ -8,22 +15,59 @@ function find_players()
 {
   console.log("submit pressed");
   var nameValue = document.getElementById("first").value;
+  var teamValue = document.getElementById("this_team").value;
   console.log(nameValue);
+  console.log("why is it not working");
+  console.log(teamValue);
+
   // Cors: https://cors-anywhere.herokuapp.com/
   $(document).ready(function() 
   {
     $.get(heroku + search_url, function(data, status)
     {
       // console.log("Data: " + data + "\nStatus: " + status);
+
+
       let arr = [];
-      console.log($( 'em:contains("Saints")', data ));
+      // I need to do a toupper on first letter
+      $( 'em:contains("Saints")', data ).each(function( index ) {
+        arr.push($(this));
+      });
+      // I might need to add some more filtering here
+      // This gets the correct linkage
+      console.log(arr[0].parent().parent().find("a").attr("href"));
+
+      // This gives /players/T/ThomMi05.htm
+      let player_link = arr[0].parent().parent().find("a").attr("href");
+      go_to_gamelog(player_link);
     });
   });
 }
+
+function go_to_gamelog(player_link)
+{
+  var site = "https://www.pro-football-reference.com" + player_link + "/gamelog";
+  console.log(site);
+}
+
+function find_opponent()
+{
+  // Loops over the elements w/HTML that contains NYG and stores in an array
+  let arr = [];
+  $( 'a:contains("NYG")', html ).each(function( index ) {
+    arr.push($(this));
+  });
+  console.log("here");
+  console.log(arr[1].parent().parent().attr('id'));
+  console.log(arr.length);
+}
+
+
 function get_yards()
 {
 
 }
+
 $(document).ready(function() {
   // all custom jQuery will go here
   console.log("queery");
