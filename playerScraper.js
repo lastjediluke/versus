@@ -1,5 +1,6 @@
 // Start server: python3 -m http.server 1234 --bind 127.0.0.1
 // http://127.0.0.1:1234/
+// Ctrl+F5 when refreshing the browser
 
 
 // const rp = require('request-promise');
@@ -10,27 +11,39 @@
 
 const search_url = "https://www.pro-football-reference.com/search/search.fcgi?hint=Michael+Thomas&search=Michael+Thomas"
 const heroku = "https://cors-anywhere.herokuapp.com/"
+let g_html = "";
+let search_url_start = "https://www.pro-football-reference.com/search/search.fcgi?search="
 
 function find_players()
 {
   console.log("submit pressed");
   var nameValue = document.getElementById("first").value;
-  var teamValue = document.getElementById("this_team").value;
+  var teamValue = document.getElementById("first_team").value;
+  var lastNameValue = document.getElementById("last").value;
   console.log(nameValue);
-  console.log("why is it not working");
   console.log(teamValue);
+
+  let full_search_url = search_url_start + nameValue + "+" + lastNameValue;
+  console.log(full_search_url);
 
   // Cors: https://cors-anywhere.herokuapp.com/
   $(document).ready(function() 
   {
-    $.get(heroku + search_url, function(data, status)
+    $.get(heroku + full_search_url, function(data, status)
     {
       // console.log("Data: " + data + "\nStatus: " + status);
+      console.log(status);
+      // console.log(data);
+
+      // I need to add a check to see if I am on the search results page
 
 
-      let arr = [];
+      
       // I need to do a toupper on first letter
-      $( 'em:contains("Saints")', data ).each(function( index ) {
+      const nameCapitalized = teamValue.charAt(0).toUpperCase() + teamValue.slice(1);
+      console.log(nameCapitalized);
+      let arr = [];
+      $( 'em:contains("' + nameCapitalized + '")', data ).each(function( index ) {
         arr.push($(this));
       });
       // I might need to add some more filtering here
@@ -44,13 +57,75 @@ function find_players()
   });
 }
 
+// https://www.pro-football-reference.com/players/B/BradTo00.htm
+function find_players2()
+{
+  // grab vals in fields
+  console.log("submit pressed");
+  var nameValue = document.getElementById("first").value;
+  var teamValue = document.getElementById("teams").value;
+  var lastNameValue = document.getElementById("last").value;
+  console.log(nameValue);
+  console.log(lastNameValue);
+  console.log(teamValue);
+
+  // Slice up strings
+  let last_name_letter = lastNameValue[0]
+  let last_name_4_letters = lastNameValue.slice(0, 4);
+  let first_name_2_letters = nameValue.slice(0, 2);
+  console.log(first_name_2_letters);
+  console.log(last_name_4_letters);
+  console.log(last_name_letter);
+
+  // Create URL
+  let player_iter = 0;
+
+  // TODO: loop it to test 1, 2, 3, and so forth
+  let player_url = "www.pro-football-reference.com/players/" + last_name_letter + "/" + last_name_4_letters + 
+    first_name_2_letters + "0" + player_iter.toString() + ".htm";
+  
+  console.log(player_url);
+  $(document).ready(function() 
+  {
+    // returns html of the page
+    $.get(heroku + player_url, function(data, status)
+    {
+      // finds the element that contains the team name
+      let query = 'a:contains(' + '"' + teamValue + '"' + ')';
+      console.log(query);
+      
+      // queries the data (html) and prints the text value 
+      val = $(query, data);
+      console.log(val.text());
+      
+    });
+  });
+
+
+
+  // Test 00 and so forth
+
+
+
+
+
+
+}
+
 function go_to_gamelog(player_link)
 {
   var site = "https://www.pro-football-reference.com" + player_link + "/gamelog";
-  console.log(site);
+  console.log("Site = " + site);
+  $(document).ready(function() 
+  {
+    $.get(heroku + site, function(data, status)
+    {
+      console.log(data);
+    });
+  });
 }
 
-function find_opponent()
+function find_opponent(opp)
 {
   // Loops over the elements w/HTML that contains NYG and stores in an array
   let arr = [];

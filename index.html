@@ -16,18 +16,27 @@
 <body>
   <div>
     <form>
-      <label for="first">Player</label><br>
+      <label for="first">Player First Name</label><br>
       <input type="text" id="first" name="first"><br>
 
-      <label for="first_team">Team</label><br>
-      <input type="text" id="this_team" name="first_team"><br>
+      <label for="last">Player Last Name</label><br>
+      <input type="text" id="last" name="last"><br>
+
+      <label for="teams">Choose a team:</label>
+        <select id="teams" name="teams">
+          <option value="Tampa Bay Buccaneers">Bucs</option>
+          <option value="Saints">Saints</option>
+          
+          <option value="fiat">Fiat</option>
+          <option value="audi">Audi</option>
+        </select>
 
       <p>vs.</p>
       <label for="second">Team</label><br>
       <input type="text" id="second" name="second">
 
       <!-- Do a button instead of type=submit -->
-      <input onclick="find_players()" type="button" value="Submit">
+      <input onclick="find_players2()" type="button" value="Submit">
     </form>
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
