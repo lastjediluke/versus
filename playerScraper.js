@@ -6,11 +6,32 @@
 // const rp = require('request-promise');
 // const $ = require('cheerio');
 // const url = 'https://www.pro-football-reference.com/players/T/ThomMi05/gamelog/';
+const heroku = "https://cors-anywhere.herokuapp.com/"
 
+
+
+// Start the worker in which sql.js will run
+// var worker = new Worker("https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.4.0/dist/sql-wasm.js");
+// var worker = new Worker("sql-wasm.js");
+var worker = new Worker (heroku + "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.4.0/dist/worker.sql-wasm.js");
+worker.onerror = error;
+
+// Open a database
+// worker.postMessage({ action: 'open' });
+
+// Connect to the HTML element we 'print' to
+function print(text) {
+	outputElm.innerHTML = text.replace(/\n/g, '<br>');
+}
+function error(e) {
+	console.log(e);
+	errorElm.style.height = '2em';
+	errorElm.textContent = e.message;
+}
 
 
 const search_url = "https://www.pro-football-reference.com/search/search.fcgi?hint=Michael+Thomas&search=Michael+Thomas"
-const heroku = "https://cors-anywhere.herokuapp.com/"
+
 let g_html = "";
 let search_url_start = "https://www.pro-football-reference.com/search/search.fcgi?search="
 
@@ -57,6 +78,30 @@ function find_players()
   });
 }
 
+// let query = 'th:contains("Career")';
+function get_stats()
+{
+  // FInd table row that says career
+  let query = 'tfoot > tr > th:contains("Career")';
+  let res = $(query, g_html);
+  console.log(res.text());
+
+  // get the parent element
+  // let dad = res.parent();
+  // console.log(dad.attr('data-row'));
+
+  // get all stats from the row
+  let games_query = 'tfoot:first tr:first td[data-stat="g"]';
+  res = $(games_query, g_html);
+  console.log(res.text());
+
+  // qb-rec
+  let qb_rec_query = 'tfoot:first tr:first td[data-stat="qb_rec"]';
+  res = $(qb_rec_query, g_html);
+  console.log(res.text());
+
+}
+
 // https://www.pro-football-reference.com/players/B/BradTo00.htm
 function find_players2()
 {
@@ -79,29 +124,38 @@ function find_players2()
 
   // Create URL
   let player_iter = 0;
-
-  // TODO: loop it to test 1, 2, 3, and so forth
-  let player_url = "www.pro-football-reference.com/players/" + last_name_letter + "/" + last_name_4_letters + 
-    first_name_2_letters + "0" + player_iter.toString() + ".htm";
+  let lock = 0;
   
-  console.log(player_url);
-  $(document).ready(function() 
+  // TODO: loop is really bad
+  // Find way to check other numbers
+  let player_url = "www.pro-football-reference.com/players/" + last_name_letter + "/" + last_name_4_letters + 
+  first_name_2_letters + "0" + player_iter.toString() + ".htm";
+
+  // returns html of the page
+  lock = 1;
+  $.get(heroku + player_url, function(data, status)
   {
-    // returns html of the page
-    $.get(heroku + player_url, function(data, status)
+    // finds the element that contains the team name
+    g_html = data;
+    let query = 'a:contains(' + '"' + teamValue + '"' + ')';
+    console.log(player_iter);
+    console.log(player_url);
+    console.log(query);
+    
+    // queries the data (html) and prints the text value 
+    let val = $(query, data);
+    console.log(val.text());
+    if (val.text() === teamValue)
     {
-      // finds the element that contains the team name
-      let query = 'a:contains(' + '"' + teamValue + '"' + ')';
-      console.log(query);
-      
-      // queries the data (html) and prints the text value 
-      val = $(query, data);
-      console.log(val.text());
-      
-    });
+      console.log('Found team value');
+      player_iter = 100;
+      get_stats();
+    }
+    lock = 0;
   });
 
-
+  
+ 
 
   // Test 00 and so forth
 
@@ -145,7 +199,7 @@ function get_yards()
 
 $(document).ready(function() {
   // all custom jQuery will go here
-  console.log("queery");
+  console.log("queeryt");
 });
 
 /*
