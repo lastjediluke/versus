@@ -14,10 +14,21 @@
   <h1 align="center">Versus</h1>
 </header>
 <body>
-  <textarea id="csv" name="csv_textarea" rows="20" cols="50">
+  <p>Enter Player 1's Career Per Game Data</p>
+  <textarea id="csv1" name="csv_textarea" rows="20" cols="50">
   </textarea>
   <br>
-  <button onclick="get_csv()">Submit</button>
+  <button onclick="get_csv(1)">Submit</button>
+
+  <p>Enter Player 2's Career Per Game Data</p>
+  <textarea id="csv2" name="csv_textarea" rows="20" cols="50">
+  </textarea>
+  <br>
+  <button onclick="get_csv(2)">Submit</button>
+
+  <canvas id="myChart"></canvas>
+
+  
   <div>
     <form>
       <label for="first">Player First Name</label><br>
@@ -47,6 +58,7 @@
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.4.0/dist/sql-wasm.js"></script> -->
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/mode/sql/sql.min.js"></script> -->
   <script src=https://cdnjs.cloudflare.com/ajax/libs/sql.js/0.3.2/js/sql.js></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <script src="papaparse.js"></script>
 
 	<script src="playerScraper.js"></script>
