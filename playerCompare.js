@@ -44,6 +44,8 @@ class Player {
   }
 }
 
+let g_data = [];
+
 function get_csv(p_num)
 {
   let csv = document.getElementById("csv" + p_num.toString()).value;
@@ -56,9 +58,15 @@ function get_csv(p_num)
   var yds = extract_yards(results.data);
 
   console.log("yds = " + yds);
+  create_dataset(yds, p_num);
 }
 
-jared.get_yds();
+function random_color_gen()
+{
+  return "#" + Math.floor(Math.random()*16777215).toString(16);
+}
+
+
 
 // pass in results.data
 function extract_yards(json)
@@ -66,10 +74,66 @@ function extract_yards(json)
   return json[json.length - 1][11];
 }
 
-// 
+// I should push an object instead of p_num
+function create_dataset(yds, p_num)
+{
+  data = 
+  {
+    label: 'Player',
+    backgroundColor: random_color_gen(),
+    borderColor: 'rgb(0, 0, 0)',
+    borderWidth: 1,
+    data: [
+      yds
+    ]
+  }
+  g_data.push(data);
+  console.log(g_data);
+}
+
+function create_bar_chart()
+{
+  console.log(g_data);
+  var barChartData = {
+    labels: ['Yards', 'TDs', 'Comp %', '1Ds', 'QBR', 'Ints', 'Sacks'],
+    datasets: [
+      g_data[0],
+      g_data[1]
+    ]
+  };
+  
+  var ctx = document.getElementById('myChart').getContext('2d');
+  window.myBar = new Chart(ctx, {
+    type: 'bar',
+    data: barChartData,
+    options: {
+      responsive: true,
+      legend: {
+        position: 'top',
+      },
+      scales: {
+        xAxes: [{
+          
+        }],
+        yAxes: [{
+          ticks: {
+          // min: 0
+          beginAtZero: true
+          }
+          
+        }],
+      },
+      title: {
+        display: true,
+        text: 'QB Comparison (per game)'
+      }
+    }
+  });
+}
 
 
 // line chart
+/*
 var ctx = document.getElementById('myChart').getContext('2d');
 var chart = new Chart(ctx, {
     // The type of chart we want to create
@@ -89,7 +153,62 @@ var chart = new Chart(ctx, {
     // Configuration options go here
     options: {}
 });
+*/
 
+// bar 
+/*
+var barChartData = {
+  labels: ['Yards per game', 'February', 'March', 'April', 'May', 'June', 'July'],
+  datasets: [
+    {
+      label: 'he',
+      backgroundColor: 'rgb(255, 0, 0)',
+      borderColor: 'rgb(0, 0, 0)',
+      borderWidth: 1,
+      data: [
+        500
+      ]
+    }, 
+    {
+      label: 'ha 2',
+      backgroundColor: 'rgb(0, 0, 255)',
+      borderColor: 'rgb(0, 0, 0)',
+      borderWidth: 1,
+      data: [
+        250
+      ]
+    }
+  ]
+};
+
+var ctx = document.getElementById('myChart').getContext('2d');
+window.myBar = new Chart(ctx, {
+  type: 'bar',
+  data: barChartData,
+  options: {
+    responsive: true,
+    legend: {
+      position: 'top',
+    },
+    scales: {
+      xAxes: [{
+        
+      }],
+      yAxes: [{
+        ticks: {
+        // min: 0
+        beginAtZero: true
+        }
+        
+      }],
+    },
+    title: {
+      display: true,
+      text: 'QB Comparison'
+    }
+  }
+});
+*/
 
 		
 	
